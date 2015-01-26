@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html>
+	<head>
+	<title>
+		Tile placing GUI
+	</title>
+    <link rel="stylesheet" href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.23/themes/ui-lightness/jquery-ui.css" type="text/css" media="all" />
+    <link rel="stylesheet" href="css.css" />
+        
+	<script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+	<script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.23/jquery-ui.min.js"></script>
+	<script src="http://thinkpixellab.com/tilesjs/tiles.js"></script>
+	<script src="core.js"></script>
+	</head>
+	<body align=center>
+		<h1>Index of Configurations of Tile Settings</h1>
+		<table width="100%">
+			<tr>
+				<td width="25%" id="blockFrame" valign="top">
+					<h2>Available blocks:</h2>
+					<svg id="svg_blocks"></svg>
+				</td>
+				<td width="50%" id="mainFrame"><div id='graphical-index' class="grid"></div></td>
+				<td width="25%" id="statFrame" valign="top">
+					<h2>Statistics:</h2>
+					<table>
+						<tr> 
+							<th>
+								Dimension of field:
+							</th>
+							<td id='dimField'>
+								Loading...
+							</td>
+						</tr>
+						<tr> 
+							<th>
+								Number of blocks:
+							</th>
+							<td id='numBlocks'>
+								Loading...
+							</td>
+						</tr>
+						<tr> 
+							<th>
+								Number of solutions:
+							</th>
+							<td id='numSols'>
+								Loading...
+							</td>
+						</tr>
+						<tr> 
+							<th>
+								Most unique solution:
+							</th>
+							<td id='mostUnq'>
+								Not (yet) supported...
+							</td>
+						</tr>
+					</table>
+				</td>
+			</tr>
+		</table>
+		<button onclick="var_solution('-')"><<</button><input type="number" id="ID" min=0 max=100><button onclick="var_solution('+')">>></button><br>
+		<button onclick="load_solution_wrapper()">Display solution</button>
+		<button onclick="load_solution(-1)">Random solution</button>
+	</body>
+</html>
