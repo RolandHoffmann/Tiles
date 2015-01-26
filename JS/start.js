@@ -49,10 +49,11 @@ function load_case(i) {
 function load_solution(i){
 	blocks = cases[i]['blocks'];
 	field = cases[i]['field'];
+	y_text = 15;
 	$(document).ready(function(){
 		// Coordinates of first block
 		x = 5;
-		y = 5;
+		y = 20;
 		blocks.sort(function(a,b){return Math.min(b[0],b[1])-Math.min(a[0],a[1])})
 		factor = Math.min(150/Math.max(blocks[0][0], blocks[0][1]), 10);
 		for (b=0; b < blocks.length; b++){
@@ -61,7 +62,6 @@ function load_solution(i){
 			$("#svg_" + i).append("<rect x=" + x + " y=" + y + " width=" + 
 							width + " height=" + height + " style='fill:" + colors[blocks.length - b] + ";stroke:black;stroke-width:1'/>");
 			x_text = x + 1;
-			y_text = y + height + 13;
 			$("#svg_" + i).append("<text x=" + x_text + " y=" + y_text + ">" + blocks[b][0] + " x " + blocks[b][1] + "</text>"); 
 			x = x + width + 5;
 		};
@@ -77,6 +77,8 @@ $(document).ready(function() {
 		raw_cases = data.split('\n');
 		cases = [];
 		for(index=0; index < raw_cases.length;index++) {
+			id = index + 1;
+			$("#body").append("<div id='start-graphical-index" + id + "' class='grid_start' onclick='load_case(" + index + ")'><svg id='svg_" + index + "'></svg></div>");
 			elements = raw_cases[index].split(', ');
 			blocks = [];
 			for (i = 2; i < elements.length - 1;i+=2 ){
