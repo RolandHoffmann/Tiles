@@ -50,6 +50,10 @@ svg {
     height 91px;
 }
 
-td{
+#graphical-index > div {
+    opacity:1;
+}
+
+td {
     text-align: left;
 }

@@ -58,6 +58,7 @@ function get_case(ID){
 		document.getElementById('dimField').innerHTML = statistics['field'];
 		document.getElementById('numBlocks').innerHTML = statistics['blocks'];
 		document.getElementById('numSols').innerHTML = statistics['solutions'];
+		document.getElementById('header').remove();
 		load_blocks();
 		load_solution(1);
 	});
@@ -281,16 +282,18 @@ function load_solution(ID){
 
 function load_blocks(){
 	blocks_bs = blocks.slice();
+	blocks_bs.reverse()
 	// Coordinates of first block
 	x_bs = 5;
 	y_bs = 5;
-	blocks_bs.sort(function(a,b){return Math.max(b[0],b[1])-Math.max(a[0],a[1])});
+	//blocks_bs.sort(function(a,b){return Math.max(b[0],b[1])-Math.max(a[0],a[1])});
 	factor_bs = Math.min(150/Math.max(blocks_bs[0][0], blocks_bs[0][1]), 10);
 	for (var b=0; b < blocks_bs.length; b++){
 		width_bs = Math.max(blocks_bs[b][0], blocks_bs[b][1])*factor_bs;
 		height_bs = Math.min(blocks_bs[b][0], blocks_bs[b][1])*factor_bs;
+		color = colors[blocks.length - b];
 		$("#svg_blocks").append("<rect x=" + x_bs + " y=" + y_bs + " width=" + 
-						width_bs + " height=" + height_bs + " style='fill:" + colors[blocks.length - b] + ";stroke:black;stroke-width:1'/>");
+						width_bs + " height=" + height_bs + " style='fill:" + color + ";stroke:black;stroke-width:1'/>");
 		y_bs = y_bs + height_bs + 5;
 	};
 };
@@ -344,7 +347,7 @@ $(function() {
     grid.resize();
 
     // adjust number of tiles to match selected template
-    grid.updateTiles([1,2,3,4,5,6,7,8,9,10]);
+    grid.updateTiles([1,2,3,4,5,6,7,8]);
     grid.redraw(true);
 
 	$('#tile_1').width(400);
