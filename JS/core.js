@@ -117,13 +117,13 @@ function var_solution(sign){
 			load_solution(next);
 		}
 	};
-}
+};
 
 // Display solution
 function load_solution_wrapper(){
 	ID = document.getElementById("ID").value;
 	load_solution(ID);
-}
+};
 
 // Load the ID'th solution
 function load_solution(ID){
