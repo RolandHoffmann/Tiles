@@ -72,7 +72,7 @@ function get_case(ID){
 		load_blocks();
 
 		// Load a solution
-		load_solution(1);
+		// load_solution(1);
 	});
 };
 
@@ -228,11 +228,6 @@ function load_blocks(){
 	};
 };
 
-grid_text = [" A A A B B B",
-        	  " A A A B B B",
-        	  " A A A B B B",
-       		  " . . . . . ."]
-
 function focus_block(tileId){
 	places[current_focus] = places[tileId];
 	// If the swap is with a smaller tile, change sizes
@@ -257,40 +252,17 @@ function focus_block(tileId){
 	places[tileId] = 1;
 };
 
-
 // Loads the grid and tiles
 $(function() {
-    var el = document.getElementById('graphical-index'),
-        grid = new Tiles.Grid(el);
-
-    // template is selected by user, not generated so just
-    // return the number of columns in the current template
-    grid.resizeColumns = function() {
-        return this.template.numCols;
-    };
-
-    // by default, each tile is an empty div, we'll override creation
-    // to add a tile number to each div
-    grid.createTile = function(tileId) {
-        var tile = new Tiles.Tile(tileId);
-        tile.$el.append('<div class="dev-tile-number" width=92px height=92px ID="tile_' + tileId +'" onclick="focus_block(' + tileId +')">' + body_grid(tileId) +'</div>');
-        return tile;
-    };
-
-    // set the new template and resize the grid
-    grid.template = Tiles.Template.fromJSON(grid_text);  
-    grid.isDirty = true;
-    grid.resize();
-
-    // adjust number of tiles to match selected template
-    grid.updateTiles([1,2,3,4,5,6,7,8]);
-    grid.redraw(true);
-
-	$('#tile_1').width(400);
-    $('#tile_1').height(400);
-	$('#tile_2').width(400);
-    $('#tile_2').height(400);
-
+   	$('#graphical-index').append('<svg class="big_tile" x=5 y=5 ID="main_svg_1" onclick="focus_block(1)">test</svg>');
+   	$('#graphical-index').append('<svg class="big_tile" x=500 y=5 ID="main_svg_2" onclick="focus_block(2)"></svg>');
+   	x = 5;
+   	y = 500;
+   	for (var tileId = 3; tileId < 9; tileId++) {
+   		$('#graphical-index').append('<svg class="small_tile" x="' + x + '" y="' + y + '" ID="main_svg_' + tileId +'" onclick="focus_block(' + tileId +')"></svg>');	
+   		x += 150;
+   	};
+   	
     // Tile ID -> current place
     places = {1:1, 2:2, 3:3, 4:4, 5:5, 6:6, 7:7, 8:8, 9:9, 10:10};
 

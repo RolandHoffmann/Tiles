@@ -68,7 +68,7 @@ function hsvToRgb(h, s, v) {
 	}
 			
 	return [Math.round(r * 255), Math.round(g * 255), Math.round(b * 255)];
-}
+};
 
 function make_colors(total) {
    var i = 360 / (total - 1); // distribute the colors evenly on the hue range
@@ -83,10 +83,34 @@ function make_colors(total) {
 		q.push(r[total-x]);
 	}
 	 return q;
-}
+};
 // Color makers end
 
 // Helper function to implement the body of the gird
 function body_grid(id){
 	return '<svg width=100% height=100% id="main_svg_' + id + '"></svg>';
 };
+
+// Calculates the number of alternative frames
+function alt_frames() {
+	flat_arr = arguments;
+	minimal_side = flat_arr[0];
+	surface = 0;
+	for (var i = 0; i < flat_arr.length - 1; i=i+2){
+		surface = surface + flat_arr[i] * flat_arr[i+1];
+		if (Math.min(flat_arr[i],flat_arr[i+1]) > minimal_side) {
+			minimal_side = Math.min(flat_arr[i],flat_arr[i+1]);
+		}
+	};
+
+	maximal_side = Math.ceil(Math.sqrt(surface));
+
+	possibilities = [];
+	for (var i = minimal_side; i < maximal_side; i++) {
+		other_side = surface/i;
+		if (other_side % 1 == 0) {
+			possibilities.push([i, other_side])
+		};
+	};
+	return possibilities.length
+}
