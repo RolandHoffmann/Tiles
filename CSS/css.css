@@ -1,6 +1,12 @@
 body {
     padding: 20px;
     font-family: Calibri;
+    background-color: #2E2E2E;
+    color: white;
+}
+
+svg > text {
+    fill:white;
 }
 
 svg {
@@ -9,15 +15,11 @@ svg {
 }
 
 .grid {
-    align: center;
     width: 90%;
     height: 600px;
     position: relative;
     overflow-x: hidden;
     overflow-y: hidden;
-    background-color: #E8E8E8;
-    margin: 10px 0px;
-    border: 10px solid #fff;
     clear: both;
     margin-left: auto;
     margin-right: auto;
@@ -25,19 +27,14 @@ svg {
 
 .big_tile {
     width: 400px;
-    height: 400px;
-    opacity: 1;
-    background-color: #E8E8E8;    
+    height: 400px;  
 }
 
 .small_tile {
     width: 100px;
     height: 100px;
     margin: 25px;
-    opacity: 1;
-    background-color: #FFFFFF;
 }
-
 
 }
 .grid_start {

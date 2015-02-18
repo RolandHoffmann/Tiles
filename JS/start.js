@@ -66,7 +66,7 @@ function load_solution(i){
 			// Append block to the svg
 			$("#svg_" + i).append("<rect x=" + x + " y=" + y + " width=" + width 
 				+ " height=" + height + " style='fill:" + 
-				colors[blocks.length - b] + ";stroke:black;stroke-width:1'/>");
+				colors[blocks.length - b] + ";stroke:white;stroke-width:1'/>");
 
 			// Change the x-coordinate of the text so it aligns to the block
 			x_text = x + 1;

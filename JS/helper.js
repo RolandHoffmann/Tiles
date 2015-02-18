@@ -15,7 +15,7 @@ function hsvToRgb(h, s, v) {
 	// saturation and value are calculated from a range of 0 to 1. We make
 	// That conversion here.
 	s /= 100;
-	v /= 100;
+	v /= 100; 
 			
 	if(s == 0) {
 		// Achromatic (grey)
@@ -88,7 +88,7 @@ function make_colors(total) {
 
 // Helper function to implement the body of the gird
 function body_grid(id){
-	return '<svg width=100% height=100% id="main_svg_' + id + '"></svg>';
+	return '<svg id="main_svg_' + id + '"></svg>';
 };
 
 // Calculates the number of alternative frames

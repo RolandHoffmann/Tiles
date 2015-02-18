@@ -1,7 +1,7 @@
 // Imports the field, blocks and solutions
-function get_case(ID){
+function get_case(case_ID){
 	// Import cases
-	$.get('cases/' + ID + '.txt', function(data){
+	$.get('cases/' + case_ID + '.txt', function(data){
 		solutions = data.split('\n');
 		var first_line = solutions[0];
 		var first_line = first_line.split(', ');
@@ -20,8 +20,10 @@ function get_case(ID){
 			(Math.pow(Math.max(field[0],field[1]),2)), 1/2);
 		
 		// Set width/height
-		$("#main_svg_" + current_focus).attr("width", side);
-		$("#main_svg_" + current_focus).attr("height", side);
+		$("#main_svg_1").attr("width", side);
+		$("#main_svg_1").attr("height", side);
+		$("#main_svg_2").attr("width", side);
+		$("#main_svg_2").attr("height", side);
 
 		// Drop values of array at indices 0 and 1 (field sizes)
 		first_line = first_line.splice(2);
@@ -57,7 +59,7 @@ function get_case(ID){
 		
 		// Set max for input 
 		document.getElementById("ID").max = solutions.length - 3;
-		$("#main_svg_" + current_focus).empty();
+		$("#main_svg_1").empty();
 
 		// Set statistics
 		statistics = {
@@ -72,7 +74,7 @@ function get_case(ID){
 		load_blocks();
 
 		// Load a solution
-		// load_solution(1);
+		load_solution(1);
 	});
 };
 
@@ -135,7 +137,12 @@ function load_solution(ID){
 	if (ID == -1){
 		ID = Math.floor(Math.random() * solutions.length) + 1;
 	};
+	load_solution_on_tile(ID, 1);
+	load_solution_on_tile(ID + 1, 2);
+	document.getElementById("ID").value = ID;
+};
 
+function load_solution_on_tile(ID, tileId){
 	// Loads the bitstring
 	var bitstring = solutions[ID-1].trim().toString(2);
 	$(document).ready(function(){
@@ -143,7 +150,7 @@ function load_solution(ID){
 		var list_of_blocks = ints_to_list(bitstring);
 
 		// Erase the previous solution
-		$("#main_svg_" + current_focus).empty();
+		$("#main_svg_" + tileId).empty();
 
 		// Make the grid
 		var b_field = new Array();
@@ -197,16 +204,20 @@ function load_solution(ID){
 			// Get ID of the block and add it to the image
 			var block_ID = list_of_blocks[b][0];
 			var color = colors[block_ID];
-			$("#main_svg_" + current_focus).append("<rect x=" + x_disp + " y=" + 
+			$("#main_svg_" + tileId).append("<rect x=" + x_disp + " y=" + 
 				y_disp + " width=" + width_disp + " height=" + height_disp + 
-				" style='fill:" + color + ";stroke:black;stroke-width:1' ID=block_" 
+				" style='fill:" + color + ";stroke:white;stroke-width:1' ID=block_" 
 				+ block_ID + "/>");
-			// Refresh page
-			$("body").html($("body").html());
 			x = x + width;
 		};
+		
+		// Add ID to the svg
+		$("#main_svg_" + tileId).append('<rect x=2 y=375 width=50 height=20 opacity=0.5/>')
+		$("#main_svg_" + tileId).append('<text x=5 y=390>#' + ID + '</text>');
+		
+		// Refresh page
+		$("body").html($("body").html());
 	});
-	document.getElementById("ID").value = ID;
 };
 
 function load_blocks(){
@@ -223,50 +234,29 @@ function load_blocks(){
 		var height_bs = Math.min(blocks_bs[b][0], blocks_bs[b][1])*factor_bs;
 		var color = colors[blocks.length - b];
 		$("#svg_blocks").append("<rect x=" + x_bs + " y=" + y_bs + " width=" + 
-						width_bs + " height=" + height_bs + " style='fill:" + color + ";stroke:black;stroke-width:1'/>");
+						width_bs + " height=" + height_bs + " style='fill:" + color + ";stroke:white;stroke-width:1'/>");
 		y_bs = y_bs + height_bs + 5;
 	};
 };
 
 function focus_block(tileId){
-	places[current_focus] = places[tileId];
-	// If the swap is with a smaller tile, change sizes
-	if(places[tileId] > 2) {
-		$('#tile_' + current_focus + '.dev-tile-number').width(92);
-		$('#tile_' + current_focus + '.dev-tile-number').height(92);
-	};
-	var temp = $('#graphical-index > div:nth-child(1)').html();
-
-	// Change the 'big' tile with the selected tile
-	$('#graphical-index > div:nth-child(1)').html(
-		$('#graphical-index > div:nth-child(' + places[tileId] + ')').html());
-
-	// Change the 'other' tile with the 'big' tile
-	$('#graphical-index > div:nth-child(' + places[tileId] + ')').html(temp);
-
-	current_focus = tileId;
-
-	// Change the sizes of the now 'big' tile
-	$('#tile_' + current_focus + '.dev-tile-number').width(400);
-    $('#tile_' + current_focus + '.dev-tile-number').height(400);
-	places[tileId] = 1;
+	ID = parseInt(document.getElementById("ID").value);
+	load_solution(ID + tileId - 1);
 };
 
 // Loads the grid and tiles
 $(function() {
-   	$('#graphical-index').append('<svg class="big_tile" x=5 y=5 ID="main_svg_1" onclick="focus_block(1)">test</svg>');
-   	$('#graphical-index').append('<svg class="big_tile" x=500 y=5 ID="main_svg_2" onclick="focus_block(2)"></svg>');
+   	$('#graphical-index').append('<svg class="big_tile" x=5 y=5 ID="main_svg_1" onclick="focus_block(1)"><rect width="400" height="400" style="fill:#2E2E2E"/></svg>'); 
+   	$('#graphical-index').append('<svg class="big_tile" x=425 y=5 ID="main_svg_2" onclick="focus_block(2)"><rect width="400" height="400" style="fill:#2E2E2E"/></svg>');
    	x = 5;
-   	y = 500;
+   	y = 445;
    	for (var tileId = 3; tileId < 9; tileId++) {
-   		$('#graphical-index').append('<svg class="small_tile" x="' + x + '" y="' + y + '" ID="main_svg_' + tileId +'" onclick="focus_block(' + tileId +')"></svg>');	
-   		x += 150;
+   		$('#graphical-index').append('<svg class="small_tile" x="' + x + '" y="' + y + '" ID="main_svg_' + tileId +'" onclick="focus_block(' + tileId +')"><rect width="92" height="92" style="fill:#2E2E2E;stroke:white;stroke-width:2"/></svg>');	
+   		x += 146;
    	};
    	
     // Tile ID -> current place
     places = {1:1, 2:2, 3:3, 4:4, 5:5, 6:6, 7:7, 8:8, 9:9, 10:10};
-
-	current_focus = 1
 });
 
 $(document).ready(function(){
@@ -274,7 +264,7 @@ $(document).ready(function(){
 	redirect = redirect.replace('#', '');
 	$.get("cases/cases.txt", function(data) {
 		cases = data.split('\n');
-		ID = cases[redirect];
-		get_case(ID);
+		case_ID = cases[redirect];
+		get_case(case_ID);
 	});
 });
