@@ -1,8 +1,5 @@
 // This loads the first page of the site
 
-// The layout of the blocks that can be selected
-pre_text = ["."]
-
 // loads the cases
 $(document).ready(function() {
 	// Get cases
@@ -23,10 +20,15 @@ $(document).ready(function() {
 
 			// Array that contains the block of this case
 			var blocks = [];
+			var blocks_flat = [];
 			for (var i = 2; i < elements.length - 1;i+=2 ){
 				blocks.push([parseInt(elements[i]), parseInt(elements[i+1])]);
+				blocks_flat.push(parseInt(elements[i]));
+				blocks_flat.push(parseInt(elements[i+1]));
 			}
-			cases.push({'field': [elements[0], elements[1]], 'blocks': blocks});
+			cases.push({'field': [parseInt(elements[0]), parseInt(elements[1])], 
+						'blocks': blocks,
+						'alt_frames': alt_frames(blocks_flat)});
 
 			// Make colors specific for this case
 			colors = make_colors(blocks.length);
@@ -42,15 +44,15 @@ $(document).ready(function() {
 
 // Loads the blocks
 function load_solution(i){
-	blocks = cases[i]['blocks'];
-	field = cases[i]['field'];
+	var blocks = cases[i]['blocks'];
+	var field = cases[i]['field'];
 
 	// The y-coordinate of the text is fixed
-	y_text = 15;
+	var y_text = 15;
 	$(document).ready(function(){
 		// Coordinates of first block
-		x = 5;
-		y = 20;
+		var x = 5;
+		var y = 20;
 
 		// Sort the blocks based on height
 		blocks.sort(function(a,b){return Math.min(b[0],b[1])-Math.min(a[0],a[1])})
@@ -81,7 +83,17 @@ function load_solution(i){
 
 		// Last change to place the last text correctly
 		x = x + width + 5;
-		$("#svg_" + i).append("<text x=" + x + " y=" + y_text + ">in a " + field[0] + " x " + field[1] + " field</text>"); 
+		$("#svg_" + i).append("<text x=" + x + " y=" + y_text + ">in a " + 
+							field[0] + " x " + field[1] + " field</text>");
+		y_text += 30;
+		$("#svg_" + i).append("<text x=" + x + " y=" + y_text + 
+								">Possible frames:</text>");
+		var frames = cases[i]['alt_frames'];
+		for(var k=0; k < frames.length; k++) {
+			y_text += 15;
+			$("#svg_" + i).append("<text x=" + x + " y=" + y_text + ">" + 
+							frames[k][0] + " x " + frames[k][1] + "</text>");
+		}
 	});
 };
 

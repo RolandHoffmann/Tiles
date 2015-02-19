@@ -91,9 +91,9 @@ function body_grid(id){
 	return '<svg id="main_svg_' + id + '"></svg>';
 };
 
-// Calculates the number of alternative frames
-function alt_frames() {
-	flat_arr = arguments;
+// Calculates the alternative frames
+function alt_frames(list_of_blocks) {
+	flat_arr = list_of_blocks;
 	minimal_side = flat_arr[0];
 	surface = 0;
 	for (var i = 0; i < flat_arr.length - 1; i=i+2){
@@ -112,5 +112,5 @@ function alt_frames() {
 			possibilities.push([i, other_side])
 		};
 	};
-	return possibilities.length
+	return possibilities
 }
