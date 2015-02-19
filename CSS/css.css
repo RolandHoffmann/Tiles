@@ -5,13 +5,13 @@ body {
     color: white;
 }
 
-svg > text {
-    fill:white;
-}
-
 svg {
   width: 100%;
   height: 100%;
+}
+
+svg > text {
+    fill: white;
 }
 
 .grid {
@@ -20,6 +20,26 @@ svg {
     position: relative;
     overflow-x: hidden;
     overflow-y: hidden;
+    clear: both;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.grid > div {
+    background-color: #2E2E2E;
+    margin: 5px;
+    position: absolute;
+    opacity:1;
+}
+
+.grid_start {
+    align: center;
+    width: 100%;
+    position: relative;
+    overflow-x: hidden;
+    overflow-y: hidden;
+    background-color: #565656;
+    margin: 10px 0px;
     clear: both;
     margin-left: auto;
     margin-right: auto;
@@ -34,35 +54,6 @@ svg {
     width: 100px;
     height: 100px;
     margin: 25px;
-}
-
-}
-.grid_start {
-    align: center;
-    width: 100%;
-    position: relative;
-    overflow-x: hidden;
-    overflow-y: hidden;
-    background-color: #E8E8E8;
-    margin: 10px 0px;
-    border: 10px solid #fff;
-    clear: both;
-    margin-left: auto;
-    margin-right: auto;
-}
-
-.grid > div {
-    background-color: #E8E8E8;
-    margin: 5px;
-    position: absolute;
-    opacity:1;
-}
-
-.dev-tile-number, .dev-tile-size {
-    font-size: 36px;
-    padding: 0px;
-    width: 91px;
-    height 91px;
 }
 
 #graphical-index > div {
