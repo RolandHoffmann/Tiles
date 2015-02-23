@@ -30,8 +30,11 @@ function get_case(case_ID){
 
 		// Load blocks
 		blocks = [];
+		var blocks_flat = [];
 		for (i = 0; i < first_line.length - 1;i+=2 ){
 			blocks.push([parseInt(first_line[i]), parseInt(first_line[i+1])]);
+			blocks_flat.push(parseInt(first_line[i]));
+			blocks_flat.push(parseInt(first_line[i+1]));
 		}
 		number_of_blocks = blocks.length;
 		colors = make_colors(number_of_blocks);
@@ -60,16 +63,23 @@ function get_case(case_ID){
 		// Set max for input 
 		document.getElementById("ID").max = solutions.length - 3;
 		$("#main_svg_1").empty();
-
+	
+		// Calculate possible frames
+		var pos_frames = alt_frames(blocks_flat);
+		pos_frames = pos_frames.join('; ');
+		pos_frames = pos_frames.replace(/,/g, ' by ');
+		
 		// Set statistics
 		statistics = {
 			"blocks": blocks.length,
 			"field": field[0] + " by " + field[1],
-			"solutions": solutions.length - 1
+			"solutions": solutions.length - 1,
+			"alt_frames": pos_frames
 			};
 		document.getElementById('dimField').innerHTML = statistics['field'];
 		document.getElementById('numBlocks').innerHTML = statistics['blocks'];
 		document.getElementById('numSols').innerHTML = statistics['solutions'];
+		document.getElementById('posFrames').innerHTML = statistics['alt_frames'];
 		document.getElementById('header').remove();
 		load_blocks();
 
@@ -129,6 +139,12 @@ function load_solution_wrapper(){
 
 // Load the ID'th solution
 function load_solution(ID){
+	load_solution_on_tile(ID, 1);
+	load_solution_on_tile(ID + 1, 2);
+	document.getElementById("ID").value = ID;
+};
+
+function load_solution_on_tile(ID, tileId){
 	// If ID ís not given, return the first solution
 	if (ID == ''){
 		ID = 1;
@@ -137,12 +153,7 @@ function load_solution(ID){
 	if (ID == -1){
 		ID = Math.floor(Math.random() * solutions.length) + 1;
 	};
-	load_solution_on_tile(ID, 1);
-	load_solution_on_tile(ID + 1, 2);
-	document.getElementById("ID").value = ID;
-};
 
-function load_solution_on_tile(ID, tileId){
 	// Loads the bitstring
 	var bitstring = solutions[ID-1].trim().toString(2);
 	$(document).ready(function(){
@@ -266,5 +277,6 @@ $(document).ready(function(){
 		cases = data.split('\n');
 		case_ID = cases[redirect];
 		get_case(case_ID);
+		$('body').append('<br><a href="cases/' + case_ID +'.txt" download>Download this case</a>')
 	});
 });

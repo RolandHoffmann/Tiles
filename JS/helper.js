@@ -114,3 +114,9 @@ function alt_frames(list_of_blocks) {
 	};
 	return possibilities
 }
+
+// Minor Programmeren Story Telling
+
+function story_telling() {
+	console.log("verhaal");
+}
