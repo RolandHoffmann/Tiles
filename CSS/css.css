@@ -64,6 +64,12 @@ td {
     text-align: left;
 }
 
+#mainFrame {
+    vertical-align: top;
+    text-align: center;
+}
+
+
 a {
     color: white;
 }

@@ -3,8 +3,8 @@ function get_case(case_ID){
 	// Import cases
 	$.get('cases/' + case_ID + '.txt', function(data){
 		solutions = data.split('\n');
-		var first_line = solutions[0];
-		var first_line = first_line.split(', ');
+		first_line = solutions[0];
+		first_line = first_line.split(', ');
 		solutions = solutions.splice(1);
 		
 		// Init field
@@ -44,8 +44,8 @@ function get_case(case_ID){
 		
 		// Checking validity
 		total_surface = 0;
-		for (block in blocks){
-			total_surface += blocks[block][0]*blocks[block][1];
+		for (var i=0; i < blocks.length; i++){
+			total_surface += blocks[i][0]*blocks[i][1];
 		};
 
 		field_surface = field[0]*field[1];
@@ -139,6 +139,11 @@ function load_solution_wrapper(){
 
 // Load the ID'th solution
 function load_solution(ID){
+	// If ID is -1, random button has been pressed, return random sol.
+	if (ID == -1){
+		ID = Math.floor(Math.random() * solutions.length) + 1;
+	};
+
 	load_solution_on_tile(ID, 1);
 	load_solution_on_tile(ID + 1, 2);
 	document.getElementById("ID").value = ID;
@@ -148,12 +153,7 @@ function load_solution_on_tile(ID, tileId){
 	// If ID ís not given, return the first solution
 	if (ID == ''){
 		ID = 1;
-	}
-	// If ID is -1, random button has been pressed, return random sol.
-	if (ID == -1){
-		ID = Math.floor(Math.random() * solutions.length) + 1;
 	};
-
 	// Loads the bitstring
 	var bitstring = solutions[ID-1].trim().toString(2);
 	$(document).ready(function(){
@@ -243,6 +243,9 @@ function load_blocks(){
 	for (var b=0; b < blocks_bs.length; b++){
 		var width_bs = Math.max(blocks_bs[b][0], blocks_bs[b][1])*factor_bs;
 		var height_bs = Math.min(blocks_bs[b][0], blocks_bs[b][1])*factor_bs;
+		if (height_bs < 15) {
+			height_bs = 15;
+		};
 		var color = colors[blocks.length - b];
 		$("#svg_blocks").append("<rect x=" + x_bs + " y=" + y_bs + " width=" + 
 						width_bs + " height=" + height_bs + " style='fill:" + color + ";stroke:white;stroke-width:1'/>");
@@ -277,6 +280,6 @@ $(document).ready(function(){
 		cases = data.split('\n');
 		case_ID = cases[redirect];
 		get_case(case_ID);
-		$('body').append('<br><a href="cases/' + case_ID +'.txt" download>Download this case</a>')
+		$('#mainFrame').append('<br><a href="cases/' + case_ID +'.txt" download>Download this case</a>')
 	});
 });
