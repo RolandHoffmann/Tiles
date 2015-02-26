@@ -1,10 +1,28 @@
 // Imports the field, blocks and solutions
+cases_loaded = false;
+cases_related_loaded = false;
+
 function get_case(case_ID){
+	// Import closest solutions
+	$.get('cases/' + case_ID + '_related.txt', function(data){
+		var all_solutions = data.split('\n');
+		related_solutions = [];
+		for(i=0; i < all_solutions.length; i++){
+			var one_solution = all_solutions[i].split(', ');
+			related_solutions.push(one_solution);
+		};
+		cases_related_loaded = true;
+		if (cases_loaded == true){
+			// Load a solution is all is loaded
+			load_solution(1);
+		};
+	});
+
 	// Import cases
 	$.get('cases/' + case_ID + '.txt', function(data){
 		solutions = data.split('\n');
-		first_line = solutions[0];
-		first_line = first_line.split(', ');
+		var first_line = solutions[0];
+		var first_line = first_line.split(', ');
 		solutions = solutions.splice(1);
 		
 		// Init field
@@ -61,7 +79,7 @@ function get_case(case_ID){
 		};
 		
 		// Set max for input 
-		document.getElementById("ID").max = solutions.length - 3;
+		$("#ID_input").max = solutions.length - 3;
 		$("#main_svg_1").empty();
 	
 		// Calculate possible frames
@@ -82,9 +100,11 @@ function get_case(case_ID){
 		document.getElementById('posFrames').innerHTML = statistics['alt_frames'];
 		document.getElementById('header').remove();
 		load_blocks();
-
-		// Load a solution
-		load_solution(1);
+		cases_loaded = true;
+		if (cases_related_loaded == true){
+			// Load a solution is all is loaded
+			load_solution(1);
+		};
 	});
 };
 
@@ -107,22 +127,21 @@ function ints_to_list(str){
 // Go through the solutions
 function var_solution(sign){
 	// If no ID is given, return the first solution
-	if (document.getElementById("ID").value == ''){
-		load_solution('');
-		return;
+	if ($("#ID_input").val() == ''){
+		load_solution(1);
 	}
 	// If << is pressed, return the ID-1'th solution
 	if (sign == '-'){
-		prev = parseInt(document.getElementById("ID").value) - 1
+		prev = parseInt($("#ID_input").val()) - 1
 		if (prev < 1){
-			load_solution(solutions.length-1);
+			load_solution(solutions.length - 1);
 		} else {
 			load_solution(prev);
 		}
 	}
 	// If >> is pressed, return the ID+1'th solution
 	else if (sign == '+'){
-		next = parseInt(document.getElementById("ID").value) + 1
+		next = parseInt($("#ID_input").val()) + 1
 		if (next > solutions.length - 1){
 			load_solution(1);
 		} else {
@@ -133,27 +152,51 @@ function var_solution(sign){
 
 // Display solution
 function load_solution_wrapper(){
-	ID = document.getElementById("ID").value;
+	ID = $("#ID_input").val();
 	load_solution(ID);
 };
 
 // Load the ID'th solution
 function load_solution(ID){
-	// If ID is -1, random button has been pressed, return random sol.
-	if (ID == -1){
-		ID = Math.floor(Math.random() * solutions.length) + 1;
-	};
-
-	load_solution_on_tile(ID, 1);
-	load_solution_on_tile(ID + 1, 2);
-	document.getElementById("ID").value = ID;
-};
-
-function load_solution_on_tile(ID, tileId){
 	// If ID ís not given, return the first solution
 	if (ID == ''){
 		ID = 1;
 	};
+	// If ID is -1, random button has been pressed, return random sol.
+	if (ID == -1){
+		ID = Math.floor(Math.random() * solutions.length) + 1;
+	};
+	load_solution_on_tile(ID, 1);
+	
+	var almost_same = related_solutions[ID][1] - 1;
+	load_solution_on_tile(almost_same, 2);
+	$('#main_svg_2').attr('onclick', 'load_solution(' + almost_same + ')');
+	load_small_tiles(ID);
+	// Refresh page
+	$("body").html($("body").html());
+	$("#ID_input").val(ID);
+};
+
+function load_small_tiles(ID) {
+	for (var tile=3; tile < 9; tile++) {
+		fill_small_tile(ID, tile);
+	};
+};
+
+function fill_small_tile(ID, tile_number) {
+	var closest_solutions = related_solutions[ID];
+	var loaded_ID = closest_solutions[2 * (tile_number - 2) + 1] - 1;
+	var loaded_factor = parseFloat(closest_solutions[2 * (tile_number - 3)]).toFixed(2);
+	$("#main_svg_" + tile_number).empty();
+	$('#main_svg_' + tile_number).append('<rect width="100" height="100" style="fill:#565656;stroke:white;stroke-width:2"/>');
+	$('#main_svg_' + tile_number).append('<text x=5 y=15>ID:</text>');
+	$('#main_svg_' + tile_number).append('<text x=5 y=30>Factor:</text>');
+	$('#main_svg_' + tile_number).append('<text x=50 y=15>' + loaded_ID + '</text>');
+	$('#main_svg_' + tile_number).append('<text x=50 y=30>' + loaded_factor + '</text>');
+	$('#main_svg_' + tile_number).attr('onclick', 'load_solution(' + loaded_ID + ')');
+};
+
+function load_solution_on_tile(ID, tileId){
 	// Loads the bitstring
 	var bitstring = solutions[ID-1].trim().toString(2);
 	$(document).ready(function(){
@@ -249,35 +292,30 @@ function load_blocks(){
 		var color = colors[blocks.length - b];
 		$("#svg_blocks").append("<rect x=" + x_bs + " y=" + y_bs + " width=" + 
 						width_bs + " height=" + height_bs + " style='fill:" + color + ";stroke:white;stroke-width:1'/>");
+		x_text = x_bs + width_bs + 10
+		y_text = y_bs + 15
+		$("#svg_blocks").append("<text x=" + x_text + " y=" + y_text + ">" + blocks_bs[b][0] + "x" + blocks_bs[b][1] + "</text>");
 		y_bs = y_bs + height_bs + 5;
 	};
 };
 
-function focus_block(tileId){
-	ID = parseInt(document.getElementById("ID").value);
-	load_solution(ID + tileId - 1);
-};
-
-// Loads the grid and tiles
+// Loads the tiles on the grid
 $(function() {
-   	$('#graphical-index').append('<svg class="big_tile" x=5 y=5 ID="main_svg_1" onclick="focus_block(1)"><rect width="400" height="400" style="fill:#2E2E2E"/></svg>'); 
-   	$('#graphical-index').append('<svg class="big_tile" x=425 y=5 ID="main_svg_2" onclick="focus_block(2)"><rect width="400" height="400" style="fill:#2E2E2E"/></svg>');
+   	$('#graphical-index').append('<svg class="big_tile" x=5 y=5 ID="main_svg_1"><rect width="400" height="400" style="fill:#2E2E2E"/></svg>'); 
+   	$('#graphical-index').append('<svg class="big_tile" x=425 y=5 ID="main_svg_2"><rect width="400" height="400" style="fill:#2E2E2E"/></svg>');
    	x = 5;
    	y = 445;
    	for (var tileId = 3; tileId < 9; tileId++) {
-   		$('#graphical-index').append('<svg class="small_tile" x="' + x + '" y="' + y + '" ID="main_svg_' + tileId +'" onclick="focus_block(' + tileId +')"><rect width="92" height="92" style="fill:#2E2E2E;stroke:white;stroke-width:2"/></svg>');	
-   		x += 146;
+   		$('#graphical-index').append('<svg class="small_tile" x="' + x + '" y="' + y + '" ID="main_svg_' + tileId +'" onclick=""></svg>');	
+   		x += 140;
    	};
-   	
-    // Tile ID -> current place
-    places = {1:1, 2:2, 3:3, 4:4, 5:5, 6:6, 7:7, 8:8, 9:9, 10:10};
 });
 
 $(document).ready(function(){
 	var redirect = location.hash;
 	redirect = redirect.replace('#', '');
 	$.get("cases/cases.txt", function(data) {
-		cases = data.split('\n');
+		var cases = data.split('\n');
 		case_ID = cases[redirect];
 		get_case(case_ID);
 		$('#mainFrame').append('<br><a href="cases/' + case_ID +'.txt" download>Download this case</a>')

@@ -9,12 +9,6 @@ $(document).ready(function() {
 		// Array that contains the cases
 		cases = [];
 		for(var index=0; index < raw_cases.length;index++) {
-
-			// Append a division which will contain the case
-			$("#body").append("<div id='start-graphical-index" + index 
-				+ "' class='grid_start' onclick='load_case(" + index 
-					+ ")'><svg id='svg_" + index + "'></svg></div>");
-
 			// variable elements contains the field and all blocks
 			var elements = raw_cases[index].split(', ');
 
@@ -33,7 +27,14 @@ $(document).ready(function() {
 			// Make colors specific for this case
 			colors = make_colors(blocks.length);
 
+			// Append a division which will contain the case
+			$("#body").append("<div id='start-graphical-index" + index 
+				+ "' class='grid_start'><h1>" + raw_cases[index] + 
+				"</h1><svg id='svg_" + index + "' onclick='load_case(" 
+					+ index + ")'></svg></div>");
+
 			// Load current solution
+			load_solution_data(index);
 			load_solution(index);
 
 			// refresh page
@@ -41,6 +42,36 @@ $(document).ready(function() {
 		};
 	});
 });
+
+function load_solution_data(i){
+	var blocks = cases[i]['blocks'];
+	var field = cases[i]['field'];
+	var frames = cases[i]['alt_frames'];
+	y_text = 15;
+	x_text = 5;
+	$("#svg_" + i).append("<text x=" + x_text + " y=" + y_text + ">Field size:</text>");
+	y_text += 15;
+	$("#svg_" + i).append("<text x=" + x_text + " y=" + y_text + ">Amount of blocks:</text>");
+	y_text += 15;
+	$("#svg_" + i).append("<text x=" + x_text + " y=" + y_text + ">Possible frames:</text>");
+	y_text = 15;
+	x_text += 120
+	$("#svg_" + i).append("<text x=" + x_text + " y=" + y_text + ">" +
+						field[0] + " by " + field[1] + "</text>");
+	y_text += 15;
+	$("#svg_" + i).append("<text x=" + x_text + " y=" + y_text + ">" +
+					blocks.length + "</text>");
+	y_text += 15;
+
+	if (frames.length > 4){
+		frames = frames.splice(0,3);
+		frames.push('...');
+	}
+	frames = frames.join('; ');
+	frames = frames.replace(/,/g, 'x');
+	$("#svg_" + i).append("<text x=" + x_text + " y=" + y_text + ">" +
+					frames + "</text>");
+};
 
 // Loads the blocks
 function load_solution(i){
@@ -51,7 +82,7 @@ function load_solution(i){
 	var y_text = 15;
 	$(document).ready(function(){
 		// Coordinates of first block
-		var x = 5;
+		var x = 300;
 		var y = 20;
 
 		// Sort the blocks based on height
@@ -80,20 +111,6 @@ function load_solution(i){
 			// Change the x-coordinate for the next block (the 5 is a margin)
 			x = x + width + 5;
 		};
-
-		// Last change to place the last text correctly
-		x = x + width + 5;
-		$("#svg_" + i).append("<text x=" + x + " y=" + y_text + ">in a " + 
-							field[0] + " x " + field[1] + " field</text>");
-		y_text += 30;
-		$("#svg_" + i).append("<text x=" + x + " y=" + y_text + 
-								">Possible frames:</text>");
-		var frames = cases[i]['alt_frames'];
-		for(var k=0; k < frames.length; k++) {
-			y_text += 15;
-			$("#svg_" + i).append("<text x=" + x + " y=" + y_text + ">" + 
-							frames[k][0] + " x " + frames[k][1] + "</text>");
-		}
 	});
 };
 
