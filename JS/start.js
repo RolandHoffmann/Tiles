@@ -29,8 +29,8 @@ $(document).ready(function() {
 
 			// Append a division which will contain the case
 			$("#body").append("<div id='start-graphical-index" + index 
-				+ "' class='grid_start'><h1>" + raw_cases[index] + 
-				"</h1><svg id='svg_" + index + "' onclick='load_case(" 
+				+ "' class='grid_start'><h2>" + raw_cases[index] + 
+				"</h2><svg id='svg_" + index + "' onclick='load_case(" 
 					+ index + ")'></svg></div>");
 
 			// Load current solution

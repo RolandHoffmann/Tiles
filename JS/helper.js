@@ -116,7 +116,17 @@ function alt_frames(list_of_blocks) {
 }
 
 // Minor Programmeren Story Telling
-
 function story_telling() {
-	console.log("verhaal");
+	$("#story").html("<i>Gegeven een frame en een aantal tegels, op hoeveel en op welke manieren kunnen de tegels het frame vullen?</i><br>" +
+						"Deze vraag is de hoofdvraag bij het tegelzetprobleem. Voor dit probleem is het handig om de oplossingen te visualiseren, <br>" +
+						"dan zijn de oplossingen onderling makkelijker te vergelijken en worden de eventuele patronen wellicht sneller gevonden. <br>" + 
+						"Bij verschillende instanties van het probleem zijn al oplossingen gevonden en opgeslagen. <br>" + 
+						"Een instantie van het probleem is een frame met bijbehorende tegels die het oppervlak van het frame precies opvullen. <br>" + 
+						"Een eenvoudig voorbeeld is een frame met maten 10x10 en vijfentwintig tegels met maten 2x2. <br>" + 
+						"Deze tegels kunnen er maar op een unieke manier in als de tegels niet onderscheidbaar zijn, dus er is maar een oplossing.<br>" + 
+						"Omdat niet altijd alle oplossingen, laat staan een oplossing, meteen in te zien zijn, <br>" + 
+						"is er in dit project een website gebouwd om de oplossingen van een instantie te visualiseren. <br><br>" +
+						"Een praktische toepassing van dit probleem is hoe producten in een vrachtwagen passen.<br>" +
+						"Een iets minder voor de hand liggend voorbeeld is hoe een aantal machines zo efficient mogelijk ingeroosted kunnen worden.<br>" +
+						"Klik <u onclick=location.assign('tileBuilder.html#1&?1')>hier</u> om casus 1 te laden met uitleg...");
 }

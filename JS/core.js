@@ -134,7 +134,7 @@ function var_solution(sign){
 	if (sign == '-'){
 		prev = parseInt($("#ID_input").val()) - 1
 		if (prev < 1){
-			load_solution(solutions.length - 1);
+			load_solution(1);
 		} else {
 			load_solution(prev);
 		}
@@ -142,8 +142,8 @@ function var_solution(sign){
 	// If >> is pressed, return the ID+1'th solution
 	else if (sign == '+'){
 		next = parseInt($("#ID_input").val()) + 1
-		if (next > solutions.length - 1){
-			load_solution(1);
+		if (next > solutions.length - 2){
+			load_solution(next - 1);
 		} else {
 			load_solution(next);
 		}
@@ -162,13 +162,16 @@ function load_solution(ID){
 	if (ID == ''){
 		ID = 1;
 	};
-	// If ID is -1, random button has been pressed, return random sol.
-	if (ID == -1){
-		ID = Math.floor(Math.random() * solutions.length) + 1;
+
+	// If ID is -1, random button has been pressed, return random solution
+	if (ID < 1){
+		ID = Math.floor(Math.random() * solutions.length);
 	};
+	
+	console.log(ID);
 	load_solution_on_tile(ID, 1);
 	
-	var almost_same = related_solutions[ID][1] - 1;
+	almost_same = parseInt(related_solutions[ID-1][1]);
 	load_solution_on_tile(almost_same, 2);
 	$('#main_svg_2').attr('onclick', 'load_solution(' + almost_same + ')');
 	load_small_tiles(ID);
@@ -184,15 +187,15 @@ function load_small_tiles(ID) {
 };
 
 function fill_small_tile(ID, tile_number) {
-	var closest_solutions = related_solutions[ID];
-	var loaded_ID = closest_solutions[2 * (tile_number - 2) + 1] - 1;
+	closest_solutions = related_solutions[ID-1];
+	var loaded_ID = closest_solutions[2 * (tile_number - 2) + 1];
 	var loaded_factor = parseFloat(closest_solutions[2 * (tile_number - 3)]).toFixed(2);
 	$("#main_svg_" + tile_number).empty();
 	$('#main_svg_' + tile_number).append('<rect width="100" height="100" style="fill:#565656;stroke:white;stroke-width:2"/>');
 	$('#main_svg_' + tile_number).append('<text x=5 y=15>ID:</text>');
 	$('#main_svg_' + tile_number).append('<text x=5 y=30>Factor:</text>');
-	$('#main_svg_' + tile_number).append('<text x=50 y=15>' + loaded_ID + '</text>');
-	$('#main_svg_' + tile_number).append('<text x=50 y=30>' + loaded_factor + '</text>');
+	$('#main_svg_' + tile_number).append('<text x=55 y=15>' + loaded_ID + '</text>');
+	$('#main_svg_' + tile_number).append('<text x=55 y=30>' + loaded_factor + '</text>');
 	$('#main_svg_' + tile_number).attr('onclick', 'load_solution(' + loaded_ID + ')');
 };
 
@@ -313,7 +316,23 @@ $(function() {
 
 $(document).ready(function(){
 	var redirect = location.hash;
-	redirect = redirect.replace('#', '');
+	redirect = redirect.split('&');
+	if (redirect.length > 1 && redirect[1] == '?1'){
+		$('#story_2').html("Hieronder is een instantie van het probleem te zien.<br>" +
+							"Aan de linkerkant is te zien welke blokken gebruikt worden in deze instantie.<br>" +
+							"Aan de rechterkant zijn een aantal statistieken te zien.<br>" +
+							"In het midden zijn twee, of een (ligt aan de resolutie), oplossingen te zien van deze instantie.<br>" +
+							"Dit zijn niet zomaar twee willekeurige oplossingen, want het verschil tussen deze oplossingen is minimaal.<br>" +
+							"De grijze blokken aan de onderkant zijn oplossingen die sterk verwant zijn aan de linkeroplossing.<br>" +
+							"De factor is de verhouding tussen het aantal blokken die op dezelfde plek zitten en het totaal aantal blokken.<br>" + 
+							"Alle blokken zijn klikbaar, de desbetreffende oplossing wordt dan geladen.<br>" +
+							"Een specifieke of willekeurige oplossing opvragen kan door onderaan de pagina een getal in te vullen en op <i>Display Solution</i> te klikken<br>" +
+							"Als je de oplossingen wilt downloaden voor nader onderzoek, kan dat door te klikken op <u>Download this case</u>");
+	} else {
+		$('#story_2').remove();
+	}
+	
+	redirect = redirect[0].replace('#', '');
 	$.get("cases/cases.txt", function(data) {
 		var cases = data.split('\n');
 		case_ID = cases[redirect];
